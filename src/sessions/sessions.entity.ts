@@ -1,21 +1,24 @@
-import { Users } from 'src/users/users.entity';
+import { Users } from '../users/users.entity';
 import {
   Entity, PrimaryGeneratedColumn, Column,
-  CreateDateColumn, OneToMany,
+  CreateDateColumn,
   ManyToOne,
   Index,
 } from 'typeorm';
 
 @Entity('sessions')
 export class Sessions {
- @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column()
   focusMinutes!: number;
 
+  @Column({ default: 1 })
+  cycles!: number;
+
   @Column({ type: 'bigint' })
-  completedAt!: number; 
+  completedAt!: number;
 
   @ManyToOne(() => Users, u => u.sessions, { onDelete: 'CASCADE' })
   @Index()
