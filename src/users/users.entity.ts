@@ -6,11 +6,14 @@ import { Sessions } from '../sessions/sessions.entity';
 
 @Entity('users')
 export class Users {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column({ unique: true })
   email!: string;
+
+  @Column({ unique: true })
+  name!: string;
 
   @Column()
   password!: string;
