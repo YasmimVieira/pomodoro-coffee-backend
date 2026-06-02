@@ -1,12 +1,21 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt, IsNumber, IsOptional, Min } from 'class-validator';
 import { SessionsService } from './sessions.service';
 
 class CreateSessionDto {
   @IsNumber() focusMinutes!: number;
   @IsNumber() cycles!: number;
   @IsNumber() completedAt!: number;
+}
+
+class PaginationQueryDto {
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page: number = 1;
 }
 
 @Controller('sessions')
@@ -20,8 +29,8 @@ export class SessionsController {
   }
 
   @Get()
-  list(@Request() req) {
-    return this.service.findByUser(req.user.userId);
+  list(@Request() req, @Query() query: PaginationQueryDto) {
+    return this.service.findByUser(req.user.userId, query.page);
   }
 
   @Get('stats')

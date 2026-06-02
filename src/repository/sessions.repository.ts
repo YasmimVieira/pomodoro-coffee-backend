@@ -13,11 +13,22 @@ export class SessionsRepository extends TypeORMRepository<Sessions> {
     super(repository);
   }
 
-  findByUser(userId: string): Promise<Sessions[]> {
-    return this.repository.find({
+  async findByUser(userId: string, page: number = 1) {
+    const PAGE_SIZE = 10;
+    const [data, total] = await this.repository.findAndCount({
       where: { user: { id: userId } },
       order: { completedAt: 'DESC' },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
     });
+
+    return {
+      data,
+      total,
+      page,
+      pageSize: PAGE_SIZE,
+      totalPages: Math.ceil(total / PAGE_SIZE),
+    };
   }
 
   async getStats(userId: string) {

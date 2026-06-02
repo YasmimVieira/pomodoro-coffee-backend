@@ -14,8 +14,8 @@ export class SessionsService {
     });
   }
 
-  findByUser(userId: string) {
-    return this.sessionsRepository.findByUser(userId);
+  findByUser(userId: string, page: number) {
+    return this.sessionsRepository.findByUser(userId, page);
   }
 
   getStats(userId: string) {
